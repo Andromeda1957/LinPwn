@@ -1,5 +1,5 @@
 # LinPwn
-LinPwn rewritten in C++<br>
+<br>
 ![LinPwn](https://github.com/3XPL017/LinEnum/blob/master/images/LinPwn.png)
 <br>
 ## About
