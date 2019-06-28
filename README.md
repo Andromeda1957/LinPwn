@@ -10,7 +10,7 @@ Obfuscation is up to you - LinPwn was not written using any type of obfuscation 
 There will be no output after running the binary on the target machine simply because there is no need for this.<br>
 The LinPwn process will not terminate on a successful connection. If it does terminate the connection was not successful.
 ## Connection
-To get a connection you must set your IP and port you want it to connect to in the class Initialize<br>
+To get a connection you must set your IP and port you want it to connect to in the class Connection<br>
 First you must place the LinPwn binary on the target machine<br>
 Then you can simply run `nc -lvp PORT` on your machine and then run LinPwn on the target machine to get a connection.
 ## About The Code
