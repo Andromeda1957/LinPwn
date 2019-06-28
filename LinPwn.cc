@@ -12,6 +12,7 @@
 #define BUFFER 20
 #define FD 0
 
+
 void get_input(char *option) {
   write(FD, "\x1b[31m>>> \0", 10);
   fgets(option, 20, stdin);
