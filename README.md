@@ -6,8 +6,8 @@
 LinPwn is a post exploitation tool designed to be an interactive backdoor.<br>
 It was written in a way that it only works for you once it has been placed on the target machine so if you are doing a CTF or a pentest anyone else on the machine can not use it to get a shell of their own.<br>
 Obfuscation is up to you - LinPwn was not written using any type of obfuscation to make it easy to read and build on top of it so anyone on the target machine will be able to see what it is doing and who it is connecting to. So if you want obfuscation you will have to obfuscate it yourself.<br>
-The LinPwn process will not terminate on a successful connection. If it does terminate the connection was not successful.<br>
-The text that will be printed out on the target machine after executing LinPwn will try to make it appear like this is just a innocent program.
+The text that will be printed out on the target machine after executing LinPwn will try to make it appear like this is just a innocent program called LinChat.<br>
+When you type `exit` to exit out of LinPwn Segmentation fault will be printed out on the Target machine... this is not a real segmentation fault I simply just printed out the words to make it appear as such.
 ## Connection
 To get a connection you must set your IP and port you want it to connect to in the class Connection<br>
 First you must place the LinPwn binary on the target machine<br>
