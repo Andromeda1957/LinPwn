@@ -24,7 +24,10 @@ Type exit to return to LinPwn.<br>
 Example usage: `ReadFile> /etc/passwd` <br>
 This command will print the contents of a file.<br>
 Type exit to return to LinPwn.<br>
-## Compile
+## Compiling
 Compiling is completely up to you.<br>
 This is because there are different ways you might want it to be compiled.
-
+## Why it was created
+This idea is the one I had in mind when i created netpwn but since I did that in python things did not work like i wanted them to 
+so i decided to go a different direction with it. I wanted to write some C++ and while thinking of a project
+ idea i remembered my original idea with netpwn. I knew it would go much better this time since it was going to be written in C++ where I have much more control over certain things. 
