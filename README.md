@@ -30,4 +30,8 @@ This is because there are different ways you might want it to be compiled.
 ## Why it was created
 This idea is the one I had in mind when i created netpwn but since I did that in python things did not work like i wanted them to 
 so i decided to go a different direction with it. I wanted to write some C++ and while thinking of a project
- idea i remembered my original idea with netpwn. I knew it would go much better this time since it was going to be written in C++ where I have much more control over certain things. 
+idea i remembered my original idea with netpwn. I knew it would go much better this time since it was going to be written in C++ where I have much more control over certain things.<br>
+I also wanted to create a tool that I could use but no one else could like during a CTF for example.<br>
+https://www.hackthebox.eu/ Is a CTF platform where multiple people are attacking the same machine at the same time and I have noticed when ever I put a reverseshell or something on the machine people will try to use it by changing the IP and port number which makes C++ the perfect language to use to be able to avoid this.<br>
+Then I thought I not only want to to be useful for CTfs but also real world pentests this is what inspired LinChat 
+ 
