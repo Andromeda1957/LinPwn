@@ -10,7 +10,7 @@
 #include <sys/types.h>
 
 
-#define BUFFER 20
+#define BUFFER 40
 #define SD 0
 
 
@@ -76,6 +76,7 @@ class Commands {
 
   void shell() {
     char option[BUFFER];
+    char errors[BUFFER] = " 2>/dev/null\0";
     write(SD, "\x1b[32mExecuting /bin/sh\n\0", 25);
     write(SD, "Type exit to return to LinPwn.\n\0", 33);
 
@@ -84,9 +85,12 @@ class Commands {
       write(SD, "\x1b[32m \0", 8);
       get_input(option);
 
-      if (strncmp(option, "exit\0", 5) == 0) break;
-      else
+      if (strncmp(option, "exit\0", 5) == 0) {
+        break;
+      } else {
+        strncat(option, errors, BUFFER);
         system(option);
+      }
     }
   }
 
