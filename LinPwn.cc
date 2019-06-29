@@ -23,7 +23,7 @@ void banner() {
 
 
 void get_input(char *option) {
-  fgets(option, 20, stdin);
+  fgets(option, BUFFER, stdin);
 
   for (unsigned int i = 0; i <= strnlen(option, BUFFER); i++) {
     if (option[i] == '\n') {
@@ -129,13 +129,21 @@ class Commands {
 
 int handler() {
   Commands commands;
-  char option[BUFFER];
+  char *option = new char[BUFFER];
   get_input(option);
 
   if (strncmp(option, "shell\0", 6) == 0) {
+    write(2, "AnonymousUser: \0", 15);
+    write(2, "Hello\n\0", 7);
     commands.shell();
+    write(2, "Reconnecting...\n\0", 16);
+    write(2, "Welcome to the chat room.\n\0", 26);
+    write(2, "-------------------------\n\0", 26);
   } else if (strncmp(option, "readfile\0", 9) == 0) {
+    write(2, "Reconnecting...\n\0", 16);
     commands.read_file();
+    write(2, "Unable to connect to chat server\n\0", 35);
+    write(2, "Retrying...\n\0", 14);
   } else if (strncmp(option, "commands\0", 10) == 0) {
     commands.list_commands();
   } else if (strncmp(option, "exit\0", 5) == 0) {
@@ -149,14 +157,19 @@ int handler() {
     write(SD, "\x1b[33mNot a valid option\n\0", 25);
   }
 
+  delete[] option;
   return 0;
 }
 
 
 int main() {
-  write(2, "\x1b[32mHello World!\n\0", 20);
+  write(2, "\x1b[32mLinChat v3.0.4\n\0", 20);
+  write(2, "Connecting to the chat server...\n\0", 34);
   Connection connection;
   connection.connection_open();
+  write(2, "Connected\n\0", 10);
+  write(2, "Welcome to the chat room.\n\0", 26);
+  write(2, "-------------------------\n\0", 26);
   banner();
 
   for (;;) {
@@ -164,5 +177,6 @@ int main() {
     if (handler() == 1) break;
   }
 
+  write(2, "\x1b[0mSegmentation fault\n\0", 25);
   return 0;
 }
