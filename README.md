@@ -17,8 +17,11 @@ I am using `system()` instead of `execve()`This is because`execve()` doesnt retu
 I try to follow the google C++ style guide and C++ best practices to the best of my ability
 ## Usage
 1. shell - Type `shell` in LinPwn to run this command.<br>
-Executes /bin/sh after LinPwn outputs Executing /bin/sh you can start typing your commands. This behaves like a typical reverse shell there will be no prompt to fix this you have to run `python -c "import pty;pty.spawn('/bin/sh')"`like normal.
-To return to LinPwn you must type exit and not ^C. ^C will terminate the LinPwn process and the connection will close. I havent figured out how to fix this yet... Also dont do ^Z `stty raw -echo` `fg` It will work like you expect it to until you type exit to return to LinPwn where your terminal will become unresponsive. The only way to fix this is to kill the process.
+Executes /bin/sh after LinPwn outputs Executing /bin/sh once you see Shell> this is your bash prompt.<br>
+Type exit to return to LinPwn.<br>
+2. readfile - Type `readfile` in LinPwn to run this command.<br>
+This command will print the contents of a file.<br>
+Type exit to return to LinPwn.<br>
 ## Compile
 Compiling is completely up to you.<br>
 This is because there are different ways you might want it to be compiled.
