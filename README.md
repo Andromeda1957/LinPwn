@@ -17,9 +17,10 @@ I am using `system()` instead of `execve()`This is because`execve()` doesnt retu
 I try to follow the google C++ style guide and C++ best practices to the best of my ability
 ## Usage
 1. shell - Type `shell` in LinPwn to run this command.<br>
-Executes /bin/sh after LinPwn outputs Executing /bin/sh once you see Shell> this is your bash prompt.<br>
+Example usage:`Shell> id`<br> 
 Type exit to return to LinPwn.<br>
 2. readfile - Type `readfile` in LinPwn to run this command.<br>
+Example usage: `ReadFile> /etc/passwd` <br>
 This command will print the contents of a file.<br>
 Type exit to return to LinPwn.<br>
 ## Compile
