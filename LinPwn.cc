@@ -14,6 +14,14 @@
 #define SD 0
 
 
+void banner() {
+  write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
+  write(SD, "Type banner to show this banner.\n\0", 33);
+  write(SD, "Type commands to list commands.\n\0", 33);
+  write(SD, "Type exit to quit LinPwn.\n\0", 28);
+}
+
+
 void get_input(char *option) {
   fgets(option, 20, stdin);
 
@@ -66,11 +74,10 @@ class Commands {
 
 
  public:
-  void help() {
-    write(SD, "\x1b[32mOptions: \n\0", 15);
+  void list_commands() {
+    write(SD, "\x1b[32mCommands: \n\0", 18);
     write(SD, "1. shell\n\0", 10);
     write(SD, "2. readfile\n\0", 14);
-    write(SD, "3. exit\n\0", 10);
   }
 
 
@@ -129,11 +136,13 @@ int handler() {
     commands.shell();
   } else if (strncmp(option, "readfile\0", 9) == 0) {
     commands.read_file();
-  } else if (strncmp(option, "help\0", 8) == 0) {
-    commands.help();
+  } else if (strncmp(option, "commands\0", 10) == 0) {
+    commands.list_commands();
   } else if (strncmp(option, "exit\0", 5) == 0) {
     commands.quit();
     return 1;
+  } else if (strncmp(option, "banner\0", 7) == 0) {
+    banner();
   } else if (strncmp(option, "", 1) == 0) {
     return 0;
   } else {
@@ -145,11 +154,10 @@ int handler() {
 
 
 int main() {
+  write(2, "\x1b[32mHello World!\n\0", 20);
   Connection connection;
   connection.connection_open();
-  write(2, "\x1b[32mHello World!\n\0", 20);
-  write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
-  write(SD, "Type help to list commands.\n\0", 28);
+  banner();
 
   for (;;) {
     write(SD, "\x1b[31m>>> \0", 10);
