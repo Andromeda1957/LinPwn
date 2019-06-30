@@ -2,8 +2,9 @@
 
 usage() {
   echo "LinPwn build script"
-  echo "--dev       Compile with developer options enabled"
-  echo "--debug     Compile with debug options enabled"
+  echo "--default   Compile with defaut options."
+  echo "--dev       Compile with developer options enabled."
+  echo "--debug     Compile with debug optionstons enabled."
 } 
 
 
@@ -13,12 +14,15 @@ if [ $# -eq 0 ]; then
     exit
 fi
 
-if [ $1 == "--dev" ]; then
+if [ $1 == "--default" ]; then
+  g++ LinPwn.cc -o LinPwn;
+  echo "Done."
+elif [ $1 == "--dev" ]; then
   g++ -Wall -Wextra LinPwn.cc -o LinPwn;
   cpplint LinPwn.cc;
   echo "Done."
 elif [ $1 == "--debug" ]; then
-  g++ --no-pie -ggdb -static LinPwn.cc -o LinPwn;
+  g++ --no-pie -ggdb -static -fPIC LinPwn.cc -o LinPwn;
   echo "Done."
 else
   usage;
