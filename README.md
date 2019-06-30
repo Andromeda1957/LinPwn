@@ -3,7 +3,7 @@
 ![LinPwn](https://github.com/3XPL017/LinEnum/blob/master/images/LinPwn.png)
 <br>
 ## About
-LinPwn is a post exploitation tool designed to be an interactive backdoor.<br>
+LinPwn is a interactive tool created to assist you in post exploitation enumeration and privilege escalation.<br>
 It was written in a way that it only works for you once it has been placed on the target machine so if you are doing a CTF or a pentest anyone else on the machine can not use it to get a shell of their own.<br>
 Obfuscation is up to you - LinPwn was not written using any type of obfuscation to make it easy to read and build on top of it so anyone on the target machine will be able to see what it is doing and who it is connecting to. So if you want obfuscation you will have to obfuscate it yourself.<br>
 The text that will be printed out on the target machine after executing LinPwn will try to make it appear like this is just a innocent program called LinChat.<br>
