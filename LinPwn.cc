@@ -21,23 +21,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/utsname.h>
 
+#include <string>
 
 #define BUFFER 40
 #define SD 0
-
-
-void banner() {
-  write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
-  write(SD, "Type banner to show this banner.\n\0", 33);
-  write(SD, "Type commands to list commands.\n\0", 33);
-  write(SD, "Type exit to quit LinPwn.\n\0", 28);
-}
 
 
 void get_input(char *option) {
@@ -49,6 +44,145 @@ void get_input(char *option) {
     }
   }
 }
+
+
+class Banner {
+  void get_banner() {
+    write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_help() {
+    write(SD, "\n\0", 2);
+    write(SD, "Type banner to show this banner.\n\0", 33);
+    write(SD, "Type commands to list commands.\n\0", 33);
+    write(SD, "Type exit to quit LinPwn.\n\0", 28);
+    write(SD, "^C to exit quietly (LinChat doesnt close)\n\0", 42);
+  }
+
+
+  void get_sysinfo() {
+    struct utsname utsinfo;
+    uname(&utsinfo);
+    write(SD, "System: ", 8);
+    write(SD, utsinfo.sysname, 20);
+    write(SD, " ", 1);
+    write(SD, utsinfo.nodename, 20);
+    write(SD, " ", 1);
+    write(SD, utsinfo.release, 20);
+    write(SD, " ", 1);
+    write(SD, utsinfo.version, 20);
+    write(SD, " ", 1);
+    write(SD, utsinfo.machine, 20);
+    write(SD, " ", 1);
+    write(SD, utsinfo.domainname, 20);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_user() {
+    write(SD, "User: ", 6);
+
+    if (!getenv("USER")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string username = getenv("USER");
+    int size = username.length();
+    write(SD, username.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_pwd() {
+    write(SD, "Pwd: ", 6);
+
+    if (!getenv("PWD")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string pwd = getenv("PWD");
+    int size = pwd.length();
+    write(SD, pwd.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_home() {
+    write(SD, "Home: ", 6);
+
+    if (!getenv("HOME")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string home = getenv("HOME");
+    int size = home.length();
+    write(SD, home.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_shell() {
+    write(SD, "Shell: ", 6);
+
+    if (!getenv("SHELL")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string shell = getenv("SHELL");
+    int size = shell.length();
+    write(SD, shell.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_term() {
+    write(SD, "Term: ", 6);
+
+    if (!getenv("TERM")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string term = getenv("TERM");
+    int size = term.length();
+    write(SD, term.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+
+  void get_path() {
+    write(SD, "Path: ", 6);
+
+    if (!getenv("PATH")) {
+      write(SD, "none\n", 5);
+      return;
+    }
+
+    std::string path = getenv("PATH");
+    int size = path.length();
+    write(SD, path.data(), size);
+    write(SD, "\n\0", 2);
+  }
+
+ public:
+  void print_banner() {
+    get_banner();
+    get_sysinfo();
+    get_user();
+    get_pwd();
+    get_home();
+    get_shell();
+    get_term();
+    get_path();
+    get_help();
+  }
+};
 
 
 class Connection {
@@ -147,6 +281,7 @@ class Commands {
 
 int handler() {
   Commands commands;
+  Banner banner;
   char *option = new char[BUFFER];
   get_input(option);
 
@@ -168,7 +303,7 @@ int handler() {
     commands.quit();
     return 1;
   } else if (strncmp(option, "banner\0", 7) == 0) {
-    banner();
+    banner.print_banner();
   } else if (strncmp(option, "", 1) == 0) {
     return 0;
   } else {
@@ -181,14 +316,16 @@ int handler() {
 
 
 int main() {
+  signal(SIGPIPE, SIG_IGN);
   write(2, "\x1b[32mLinChat v3.0.4\n\0", 20);
   write(2, "Connecting to the chat server...\n\0", 34);
   Connection connection;
   connection.connection_open();
+  Banner banner;
   write(2, "Connected\n\0", 10);
   write(2, "Welcome to the chat room.\n\0", 26);
   write(2, "-------------------------\n\0", 26);
-  banner();
+  banner.print_banner();
 
   for (;;) {
     write(SD, "\x1b[31m>>> \0", 10);
