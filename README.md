@@ -25,7 +25,7 @@ Example usage: `ReadFile> /etc/passwd` <br>
 This command will print the contents of a file.<br>
 Type exit to return to LinPwn.<br>
 ## Compiling
-I included a file called compile.sh this is optional run `bash compile.sh` to view the compiling options if you wish to use them.
+I included a file called build.sh this is optional run `bash build.sh` to view the build options if you wish to use them.
 ## Why it was created
 This idea is the one I had in mind when i created netpwn but since I did that in python things did not work like i wanted them to 
 so i decided to go a different direction with it. I wanted to write some C++ and while thinking of a project
