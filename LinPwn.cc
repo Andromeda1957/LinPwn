@@ -1,6 +1,6 @@
 /* LinPwn
    
-   Post Exploitation interactive Backdoor 
+   Interactive Post Exploitation Tool  
 
    Copyright (C) 2019  Andromeda3(3XPL017)
 
