@@ -17,11 +17,13 @@ The IP and port are hardcoded this is intended(Read about to find out why)<br>
 I am using `system()` instead of `execve()`This is because`execve()` doesnt return instead the LinPwn process will terminate upon exiting the shell so the use of `system()`is forced.<br>
 I try to follow the google C++ style guide and C++ best practices to the best of my ability
 ## Usage
-1. shell - Type `shell` in LinPwn to run this command.<br>
+1. shell<br>
 Example usage:`Shell> id`<br> 
 Type exit to return to LinPwn.<br>
-2. readfile - Type `readfile` in LinPwn to run this command.<br>
+2. readfile<br>
 Example usage: `ReadFile> /etc/passwd` <br>
+3. enumerate - Runs LinEnum.sh
+Example usage: `>>> enumerate` 
 This command will print the contents of a file.<br>
 Type exit to return to LinPwn.<br>
 ## Compiling
