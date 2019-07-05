@@ -15,7 +15,7 @@ Type exit to return to LinPwn.<br>
 2. readfile - This command will print the contents of a file.<br>
 Example usage: `(LinPwn: ReadFile)> /etc/passwd`<br>
 Type exit to return to LinPwn.<br>
-3. enumerate - this command runs LinEnum.sh
+3. enumerate - this command runs LinEnum.sh<br>
 Example usage:  `(LinPwn) > enumerate` 
 4. download - This command downloads a file on the target machine
 Example usage: `(LinPwn: Download) > https://exampleurl.com/file_to_download`
