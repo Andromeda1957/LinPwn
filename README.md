@@ -17,7 +17,7 @@ Example usage: `(LinPwn: ReadFile)> /etc/passwd`<br>
 Type exit to return to LinPwn.<br>
 3. enumerate - this command runs LinEnum.sh<br>
 Example usage:  `(LinPwn) > enumerate` 
-4. download - This command downloads a file on the target machine
+4. download - This command downloads a file on the target machine<br>
 Example usage: `(LinPwn: Download) > https://exampleurl.com/file_to_download`
 ## Compiling
 I included a file called build.sh this is optional run `bash build.sh` to view the build options if you wish to use them. 
