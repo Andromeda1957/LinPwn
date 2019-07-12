@@ -60,6 +60,11 @@ void seperate() {
   write(sd(), seperator.data(), seperator.length());
 }
 
+void space() {
+  std::string space = " ";
+  write(sd(), space.data(), space.length());
+}
+
 void green() {
   std::string green = "\x1b[32m ";
   write(sd(), green.data(), green.length());
@@ -129,19 +134,18 @@ class Banner {
     std::string machine = utsinfo.machine;
     std::string domainname = utsinfo.domainname;
     std::string systems = "System: ";
-    std::string space = " ";
 
     write(sd(), systems.data(), systems.length());
     write(sd(), sysname.data(), sysname.length());
-    write(sd(), space.data(), space.length());
+    space();
     write(sd(), nodename.data(), nodename.length());
-    write(sd(), space.data(), space.length());;
+    space();
     write(sd(), release.data(), release.length());
-    write(sd(), space.data(), space.length());
+    space();
     write(sd(), version.data(), version.length());
-    write(sd(), space.data(), space.length());
+    space();
     write(sd(), machine.data(), machine.length());
-    write(sd(), space.data(), space.length());
+    space();
     write(sd(), domainname.data(), domainname.length());
     new_line();
   }
