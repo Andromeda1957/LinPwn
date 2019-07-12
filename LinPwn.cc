@@ -53,7 +53,7 @@ void new_line() {
 
 void seperate() {
   std::string seperator = "====================================="
-      "==========================\n";
+      "======================================\n";
 
   write(SD, seperator.data(), seperator.length());
 }
@@ -99,6 +99,7 @@ class Banner {
     get_shell();
     get_term();
     get_path();
+    new_line();
   }
 
  private:
@@ -393,7 +394,7 @@ class Commands {
     char *filecontent = new char[size];
 
     fread(filecontent, 1, size, file);
-    filecontent[size] = "\0";
+    filecontent[size] = '\0';
     send(SD, filecontent, size, 0);
     fclose(file);
     delete[] filecontent;
