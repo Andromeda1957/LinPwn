@@ -29,6 +29,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <csignal>
+#include <ctime>
+#include <chrono>//NOLINT
 #include <string>
 
 #define BUFFER 200
@@ -49,26 +51,22 @@ void get_input(char *option) {
 
 void new_line() {
   std::string newline = "\n";
-
   write(sd(), newline.data(), newline.length());
 }
 
 void seperate() {
   std::string seperator = "====================================="
       "======================================\n";
-
   write(sd(), seperator.data(), seperator.length());
 }
 
 void green() {
   std::string green = "\x1b[32m ";
-
   write(sd(), green.data(), green.length());
 }
 
 void none() {
   std::string none = "none\n";
-
   write(sd(), none.data(), none.length());
 }
 
@@ -93,6 +91,7 @@ class Banner {
  public:
   void print_banner() {
     get_banner();
+    get_time();
     get_sysinfo();
     get_user();
     get_uid();
@@ -107,9 +106,17 @@ class Banner {
  private:
   void get_banner() {
     std::string title = "\x1b[32mLinPwn\nCreated By Andromeda.\n";
-
     write(sd(), title.data(), title.length());
     new_line();
+  }
+
+  void get_time() {
+    std::string print_time = "Time: ";
+    write(sd(), print_time.data(), print_time.length());
+    auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    std::string current_time = std::ctime(&end_time);
+    write(sd(), current_time.data(), current_time.length());
   }
 
   void get_sysinfo() {
@@ -142,7 +149,6 @@ class Banner {
   void get_user() {
     std::string env = "User: ";
     std::string username = getenv("USER");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("USER")) {
@@ -158,7 +164,6 @@ class Banner {
     int uid = getuid();
     std::string env = "UID: ";
     std::string uidstr = std::to_string(uid);
-
     write(sd(), env.data(), env.length());
     write(sd(), uidstr.data(), uidstr.length());
     new_line();
@@ -167,7 +172,6 @@ class Banner {
   void get_pwd() {
     std::string env = "Pwd: ";
     std::string pwd = getenv("PWD");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("PWD")) {
@@ -182,7 +186,6 @@ class Banner {
   void get_home() {
     std::string env = "Home: ";
     std::string home = getenv("HOME");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("HOME")) {
@@ -197,7 +200,6 @@ class Banner {
   void get_shell() {
     std::string env = "Shell: ";
     std::string shell = getenv("SHELL");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("SHELL")) {
@@ -212,7 +214,6 @@ class Banner {
   void get_term() {
     std::string env = "Term: ";
     std::string term = getenv("TERM");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("TERM")) {
@@ -227,7 +228,6 @@ class Banner {
   void get_path() {
     std::string env = "Path: ";
     std::string path = getenv("PATH");
-
     write(sd(), env.data(), env.length());
 
     if (!getenv("PATH")) {
@@ -284,7 +284,6 @@ class Commands {
     std::string exits = "Type exit to return to LinPwn.\n";
     char option[BUFFER];
     const char *errors = " 2>&0";
-
     write(sd(), exe.data(), exe.length());
     write(sd(), exits.data(), exits.length());
 
