@@ -75,13 +75,12 @@ void none() {
   write(sd(), none.data(), none.length());
 }
 
-void help() {
+void help_menu() {
   std::string options = "\x1b[32mOptions \n";
   std::string banner = "banner - displays the banner.\n";
   std::string modules = "modules - lists modules.\n";
   std::string clear = "clear - clears the screen.\n";
   std::string exits = "exit - or press ^C to quit LinPwn.\n";
-
   new_line();
   write(sd(), options.data(), options.length());
   seperate();
@@ -98,6 +97,7 @@ class Banner {
     get_banner();
     get_time();
     get_sysinfo();
+    get_ip();
     get_user();
     get_uid();
     get_pwd();
@@ -134,7 +134,6 @@ class Banner {
     std::string machine = utsinfo.machine;
     std::string domainname = utsinfo.domainname;
     std::string systems = "System: ";
-
     write(sd(), systems.data(), systems.length());
     write(sd(), sysname.data(), sysname.length());
     space();
@@ -148,6 +147,12 @@ class Banner {
     space();
     write(sd(), domainname.data(), domainname.length());
     new_line();
+  }
+
+  void get_ip() {
+    std::string ip = "IP: ";
+    write(sd(), ip.data(), ip.length());
+    system("hostname -I");
   }
 
   void get_user() {
@@ -262,9 +267,9 @@ class Connection {
   struct sockaddr_in address;
 };
 
-class Commands {
+class Modules {
  public:
-  void list_Modules() {
+  void list_modules() {
     std::string modules = "\x1b[32mModules \n";
     std::string shell = "shell - Executes /bin/sh\n";
     std::string read_file = "readfile - Print the contents of a file\n";
@@ -407,32 +412,41 @@ class Commands {
 };
 
 int handler() {
-  Banner banner;
-  Commands commands;
+  Banner ban;
+  Modules modules;
   std::string not_valid = "\x1b[33mNot a valid option\n";
   char *option = new char[BUFFER];
   get_input(option);
-  const int size = strnlen(option, BUFFER) + 1;
+  std::string shell = "shell";
+  std::string read = "readfile";
+  std::string enumerate = "enumerate";
+  std::string module_list = "modules";
+  std::string download = "download";
+  std::string quit = "exit";
+  std::string clear = "clear";
+  std::string help ="help";
+  std::string banner = "banner";
+  std::string nothing = "";
 
-  if (strncmp(option, "shell\0", size) == 0)
-    commands.shell();
-  else if (strncmp(option, "readfile\0", size) == 0)
-    commands.read_file();
-  else if (strncmp(option, "enumerate\0", size) == 0)
-    commands.enumeration();
-  else if (strncmp(option, "modules\0", size) == 0)
-    commands.list_Modules();
-  else if (strncmp(option, "download\0", size) == 0)
-    commands.download();
-  else if (strncmp(option, "exit\0", size) == 0)
+  if (option == shell)
+    modules.shell();
+  else if (option == read)
+    modules.read_file();
+  else if (option == enumerate)
+    modules.enumeration();
+  else if (option == module_list)
+    modules.list_modules();
+  else if (option == download)
+    modules.download();
+  else if (option == quit)
     return 1;
-  else if (strncmp(option, "clear\0", size) == 0)
+  else if (option == clear)
     system("clear");
-  else if (strncmp(option, "help\0", size) == 0)
-    help();
-  else if (strncmp(option, "banner\0", size) == 0)
-    banner.print_banner();
-  else if (strncmp(option, "", size) == 0)
+  else if (option == help)
+    help_menu();
+  else if (option == banner)
+    ban.print_banner();
+  else if (option == nothing)
     return 0;
   else
     write(sd(), not_valid.data(), not_valid.length());
@@ -451,10 +465,10 @@ void main_loop() {
 }
 
 int main() {
-  Banner banner;
+  Banner ban;
   Connection connection;
   connection.connection_open();
-  banner.print_banner();
+  ban.print_banner();
   main_loop();
   return 0;
 }
